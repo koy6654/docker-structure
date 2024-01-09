@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  redis-cluster:
+    platform: linux/x86_64
+    image: redis:7.2.3
+    container_name: redis-cluster
+    volumes:
+      - ./6380:${DIR}/6380
+    command: redis-server ${DIR}/6380/6380.conf
+    ports:
+      - 6380:6380
+      - 6381:6381
+      - 6382:6382
+
+  redis-node-1:
+    network_mode: "service:redis-cluster"
+    platform: linux/x86_64
+    image: redis:7.2.3
+    container_name: redis-node-1
+    volumes:
+      - ./6381:${DIR}/6381
+    command: redis-server ${DIR}/6381/6381.conf
+
+  redis-node-2:
+    network_mode: "service:redis-cluster"
+    platform: linux/x86_64
+    image: redis:7.2.3
+    container_name: redis-node-2
+    volumes:
+      - ./6382:${DIR}/6382
+    command: redis-server ${DIR}/6382/6382.conf
+
+  redis-cluster-entry:
+    network_mode: "service:redis-cluster"
+    platform: linux/x86_64
+    image: redis:7.2.3
+    container_name: redis-cluster-entry
+    command: redis-cli -h 127.0.0.1 -p 6380 --cluster create 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 --cluster-yes
+    depends_on:
+      - redis-cluster
+      - redis-node-1
+      - redis-node-2
