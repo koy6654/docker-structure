@@ -1,0 +1,40 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: default
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  selector:
+    app: my-app
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - port: 32100
+    targetPort: 32100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-app
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - image: docker-tutorial:node
+        imagePullPolicy: IfNotPresent
+        name: my-app
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst

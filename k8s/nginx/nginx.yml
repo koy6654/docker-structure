@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-local
+spec:
+  selector:
+    app: nginx-local
+  type: NodePort
+  ports:
+    - name: http1
+      port: 90 # Service 내부 포트
+      targetPort: 90 # Pod을 향한 타겟 포트
+      nodePort: 32100 # 외부에서 접근할 포트
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-local
+  labels:
+    app: nginx-local
+spec:
+  replicas: 1 # 복제본 수 정의
+  selector:
+    matchLabels:
+      app: nginx-local
+  template:
+    metadata:
+      labels:
+        app: nginx-local
+    spec:
+      containers:
+        - name: nginx-local
+          image: nginx:1.14.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 90 # 컨테이너가 리스닝 중인 포트
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx # Pod 내부의 볼륨 경로
+      volumes:
+        - name: config
+          hostPath:
+            path: /Users/luke/Projects/k8s-docker/k8s/nginx/config # 나의 로컬 볼륨 경로
+            type: Directory

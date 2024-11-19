@@ -8,5 +8,5 @@ docker build -t docker-tutorial:node ./
 docker images | grep docker-tutorial:node
 
 #create docker container
-docker create --name docker-tutorial-node docker-tutorial:node
-docker start docker-tutorial-node 
+# docker create --name docker-tutorial-node docker-tutorial:node
+# docker start docker-tutorial-node 

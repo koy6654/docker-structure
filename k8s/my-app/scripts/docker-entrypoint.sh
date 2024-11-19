@@ -4,7 +4,6 @@ set -euo pipefail
 index=$1
 
 if [ "${index}" = "index.js" ]; then
-	#cd /opt/docker-tutorial/
 	while true; do
 		set +e
 		npx nodemon ${index}
