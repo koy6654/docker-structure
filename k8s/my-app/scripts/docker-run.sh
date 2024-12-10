@@ -1,11 +1,14 @@
+#delete kubernetes
+kubectl delete -f /Users/luke/Projects/k8s-docker/k8s/my-app/my-app.yml
+
 #delete image, container about docker-tutorial
-docker stop docker-tutorial-node
-docker rm docker-tutorial-node
-docker rmi docker-tutorial:node
+docker stop docker-tutorial
+docker rm docker-tutorial
+docker rmi docker-tutorial
 
 #build docker image
-docker build -t docker-tutorial:node ./
-docker images | grep docker-tutorial:node
+docker build -t docker-tutorial ./
+docker images | grep docker-tutorial
 
 #create docker container
 # docker create --name docker-tutorial-node docker-tutorial:node

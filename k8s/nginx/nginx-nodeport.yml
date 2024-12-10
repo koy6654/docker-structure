@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-local
+  name: nginx-nodeport
 spec:
   selector:
-    app: nginx-local
+    app: nginx-nodeport
   type: NodePort
   ports:
     - name: http1
@@ -16,21 +16,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-local
+  name: nginx-nodeport
   labels:
-    app: nginx-local
+    app: nginx-nodeport
 spec:
   replicas: 1 # 복제본 수 정의
   selector:
     matchLabels:
-      app: nginx-local
+      app: nginx-nodeport
   template:
     metadata:
       labels:
-        app: nginx-local
+        app: nginx-nodeport
     spec:
       containers:
-        - name: nginx-local
+        - name: nginx-nodeport
           image: nginx:1.14.2
           imagePullPolicy: IfNotPresent
           ports:
