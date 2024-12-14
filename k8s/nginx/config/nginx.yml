@@ -1,3 +1,4 @@
+# Nginx 설정과 NodePort만으로 구현된 예제
 apiVersion: v1
 kind: Service
 metadata:

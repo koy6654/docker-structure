@@ -1,4 +1,12 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+  name: ingress-nginx
+---
+apiVersion: v1
 automountServiceAccountToken: true
 kind: ServiceAccount
 metadata:
@@ -9,7 +17,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -22,7 +30,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-admission
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -34,7 +42,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx
-  namespace: default
+  namespace: ingress-nginx
 rules:
 - apiGroups:
   - ""
@@ -124,7 +132,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-admission
-  namespace: default
+  namespace: ingress-nginx
 rules:
 - apiGroups:
   - ""
@@ -244,7 +252,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx
-  namespace: default
+  namespace: ingress-nginx
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -252,7 +260,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -264,7 +272,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-admission
-  namespace: default
+  namespace: ingress-nginx
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -272,7 +280,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx-admission
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -290,7 +298,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -309,7 +317,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx-admission
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: v1
 data: null
@@ -322,7 +330,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-controller
-  namespace: default
+  namespace: ingress-nginx
 ---
 apiVersion: v1
 kind: Service
@@ -334,7 +342,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-controller
-  namespace: default
+  namespace: ingress-nginx
 spec:
   externalTrafficPolicy: Local
   ipFamilies:
@@ -346,11 +354,13 @@ spec:
     port: 80
     protocol: TCP
     targetPort: http
+    nodePort: 30080
   - appProtocol: https
     name: https
     port: 443
     protocol: TCP
     targetPort: https
+    nodePort: 30443
   selector:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
@@ -367,7 +377,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-controller-admission
-  namespace: default
+  namespace: ingress-nginx
 spec:
   ports:
   - appProtocol: https
@@ -390,7 +400,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-controller
-  namespace: default
+  namespace: ingress-nginx
 spec:
   minReadySeconds: 0
   revisionHistoryLimit: 10
@@ -513,7 +523,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-admission-create
-  namespace: default
+  namespace: ingress-nginx
 spec:
   template:
     metadata:
@@ -565,7 +575,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.12.0-beta.0
   name: ingress-nginx-admission-patch
-  namespace: default
+  namespace: ingress-nginx
 spec:
   template:
     metadata:
@@ -638,7 +648,7 @@ webhooks:
   clientConfig:
     service:
       name: ingress-nginx-controller-admission
-      namespace: default
+      namespace: ingress-nginx
       path: /networking/v1/ingresses
       port: 443
   failurePolicy: Fail
